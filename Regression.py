@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 # 0. Create logistic function
 def sigmoid(theta, X):
-		return 1/(1 + np.exp(X@-theta))
+		return 1/(1 + np.exp(-X @ theta))
 
 
 # 1. Create loss function
