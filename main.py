@@ -41,19 +41,19 @@ print("Cross Validation data: ", cv_data.shape)
 
 train_losses = []
 cv_losses = []
-
+theta = np.ones((data.shape[1], 1))
+best_theta = None
 for k in range(1,5):
 	print(k)
-
 	# Replace column 0 with the column 3 to the power of k
 	train_data[:,0] = train_data[:,7] ** k-1
-	train_data[:,1] = train_data[:,7] ** max(0, k-1)
+	train_data[:,1] = train_data[:,7] ** max(0, k-2)
 	train_data[:,2] = train_data[:,6] ** max(0, k)
 	train_data[:,3] = train_data[:,6] ** max(0, k-3)
 
 	
 	cv_data[:,0] = cv_data[:,7] ** k-1
-	cv_data[:,1] = cv_data[:,7] ** max(0, k-1)
+	cv_data[:,1] = cv_data[:,7] ** max(0, k-2)
 	cv_data[:,2] = cv_data[:,6] ** max(0, k)
 	cv_data[:,3] = cv_data[:,6] ** max(0, k-3)
 	
@@ -64,7 +64,7 @@ for k in range(1,5):
 
 	
 	theta = np.ones((X_train.shape[1], 1))
-	theta = reg.linear_regression(X_train, y_train, theta, 0.05, 0.0002)
+	theta = reg.linear_regression(X_train, y_train, theta, 0.05, 0.005)
 	# J for training data
 	y_pred_train = reg.sigmoid(theta, X_train)
 	y_pred_train = np.where(y_pred_train > 0.5, 1, 0)
@@ -79,7 +79,9 @@ for k in range(1,5):
 	y_pred_cv = np.where(y_pred_cv > 0.5, 1, 0)
 	loss_cv = reg.loss(X_cv, y_cv, theta)
 	cv_losses.append(loss_cv)
-
+	if k == 3:
+		best_theta = theta
+print(train_losses)
 plt.plot(train_losses, label='Training Loss')
 plt.plot(cv_losses, label='Validation Loss')
 plt.legend()
@@ -87,43 +89,31 @@ plt.xlabel("Iterations")
 plt.show()
 
 
-# best_k = 2
+best_k = 3
 
-# data[0] = data[3] ** best_k
 
-# test_data = data[int(0.8*len(data)):]
+
+test_data = data[int(0.8*len(data)):]
+
+test_data[:,0] = test_data[:,7] ** best_k-1
+test_data[:,1] = test_data[:,7] ** max(0, best_k-2)
+test_data[:,2] = test_data[:,6] ** max(0, best_k)
+test_data[:,3] = test_data[:,6] ** max(0, best_k-3)
 
 # # J for test data
-# X_test = test_data[:, :-1]
-# y_test = test_data[:, -1]
-# y_test = y_test.reshape(y_test.shape[0], 1)
-# theta = np.zeros((X_test.shape[1], 1))
-# theta = reg.linear_regression(X_test, y_test, theta, 0.05, 0.002)
-# y_pred_test = reg.sigmoid(theta, X_test)
-# y_pred_test = np.where(y_pred_test > 0.5, 1, 0)
-# loss_test = reg.loss(X_test, y_test, theta)
-# accuracy_test = np.sum(y_pred_test == y_test) / len(y_test)
-# precision_test = np.sum(y_pred_test[y_test == 1] == 1) / np.sum(y_pred_test == 1)
-# print("Accuracy for test data: ", accuracy_test)
-# print("Precision for test data: ", precision_test)
+X_test = test_data[:, :-1]
+y_test = test_data[:, -1]
+y_test = y_test.reshape(y_test.shape[0], 1)
+
+y_pred_test = reg.sigmoid(theta, X_test)
+y_pred_test = np.where(y_pred_test > 0.5, 1, 0)
+loss_test = reg.loss(X_test, y_test, theta)
+accuracy_test = np.sum(y_pred_test == y_test) / len(y_test)
+precision_test = np.sum(y_pred_test[y_test == 1] == 1) / np.sum(y_pred_test == 1)
+print("Accuracy for test data: ", accuracy_test)
+print("Precision for test data: ", precision_test)
 # print("Loss for test data: ", loss_train)
 
-
-# X = cv_data[:, :-1]
-# y = cv_data[:, -1]
-# y = y.reshape(y.shape[0], 1)
-# # Predicting the labels
-# y_pred = reg.sigmoid(theta, X)
-# y_pred = np.where(y_pred > 0.5, 1, 0)
-# # Get the loss function for the model
-# loss = reg.loss(X, y, theta)
-# print("Loss: ", loss)
-# # Get the accuracy of the model
-# accuracy = np.sum(y_pred == y) / len(y)
-# print("Accuracy: ", accuracy)
-# # Get the presicion of the model
-# precision = np.sum(y_pred[y == 1] == 1) / np.sum(y_pred == 1)
-# print("Precision: ", precision)
 
 
 # print(np.sum(y_pred[y == 1] == 1), np.sum(y_pred == 1))
