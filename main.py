@@ -28,8 +28,8 @@ k = 1
 np.random.seed(4)
 # Splitting the data 40% training, 40% cross validation, 20% test
 np.random.shuffle(data)
-train_data = data[:int(0.6*len(data))]
-cv_data = data[int(0.2*len(data)):int(0.8*len(data))]
+train_data = data[:int(0.4*len(data))]
+cv_data = data[int(0.4*len(data)):int(0.8*len(data))]
 
 
 
@@ -64,7 +64,7 @@ for k in range(1,5):
 
 	
 	theta = np.ones((X_train.shape[1], 1))
-	theta = reg.linear_regression(X_train, y_train, theta, 0.05, 0.005)
+	theta = reg.linear_regression(X_train, y_train, theta, 0.05, 0.05)
 	# J for training data
 	y_pred_train = reg.sigmoid(theta, X_train)
 	y_pred_train = np.where(y_pred_train > 0.5, 1, 0)
