@@ -57,33 +57,33 @@ print("Precision: ", np.sum(y_pred[y_pred == 1] == y_test[y_pred == 1]) / np.sum
 
 # Now doing a logistic regression with one polynomical feature using cross validation
 # print("=======> Logistic Regression 02 <=======")
-# new_data = clean_data.copy()
-# # Add polynomial feature: Sys BP
-# new_data = np.hstack((new_data[:, 7].reshape(new_data.shape[0], 1)**2, new_data))
-# # Normalize the data except
-# for i in range(new_data.shape[1] - 1):
-#     new_data[:, i] = (new_data[:, i] - np.mean(new_data[:, i])) / np.std(new_data[:, i])
+new_data = clean_data.copy()
+# Add polynomial feature: Sys BP
+new_data = np.hstack((new_data[:, 7].reshape(new_data.shape[0], 1)**2, new_data))
+# Normalize the data except
+for i in range(new_data.shape[1] - 1):
+    new_data[:, i] = (new_data[:, i] - np.mean(new_data[:, i])) / np.std(new_data[:, i])
 
-# # Bias
-# new_data = np.hstack((np.ones((new_data.shape[0], 1)), new_data))
-# train_data = new_data[:int(0.4*len(new_data))]
-# cv_data = new_data[int(0.4*len(new_data)):int(0.6*len(new_data))]
-# test_data = new_data[int(0.6*len(new_data)):]
+# Bias
+new_data = np.hstack((np.ones((new_data.shape[0], 1)), new_data))
+train_data = new_data[:int(0.4*len(new_data))]
+cv_data = new_data[int(0.4*len(new_data)):int(0.6*len(new_data))]
+test_data = new_data[int(0.6*len(new_data)):]
 
-# # Train the model
-# X = train_data[:, :-1]
-# y = train_data[:, -1].reshape(train_data.shape[0], 1)
-# theta = np.ones((X.shape[1], 1))
-# theta = reg.linear_regression(X, y, theta, 0.01, 0.01)
-# # Predict the test data
-# X_test = test_data[:, :-1]
-# y_test = test_data[:, -1].reshape(test_data.shape[0], 1)
+# Train the model
+X = train_data[:, :-1]
+y = train_data[:, -1].reshape(train_data.shape[0], 1)
+theta = np.ones((X.shape[1], 1))
+theta = reg.linear_regression(X, y, theta, 0.01, 0.01)
+# Predict the test data
+X_test = test_data[:, :-1]
+y_test = test_data[:, -1].reshape(test_data.shape[0], 1)
 
-# y_pred = reg.sigmoid(theta, X_test)
-# y_pred = np.where(y_pred > 0.5, 1, 0)
-# # Accuracy and precision
-# print("Accuracy: ", np.sum(y_pred == y_test) / len(y_test))
-# print("Precision: ", np.sum(y_pred[y_pred == 1] == y_test[y_pred == 1]) / np.sum(y_pred == 1))
+y_pred = reg.sigmoid(theta, X_test)
+y_pred = np.where(y_pred > 0.5, 1, 0)
+# Accuracy and precision
+print("Accuracy: ", np.sum(y_pred == y_test) / len(y_test))
+print("Precision: ", np.sum(y_pred[y_pred == 1] == y_test[y_pred == 1]) / np.sum(y_pred == 1))
 # print("=======> Logistic Regression 02 <=======")
 
 
